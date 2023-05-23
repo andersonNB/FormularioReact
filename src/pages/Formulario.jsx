@@ -5,16 +5,23 @@ import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import { ValidarOtaku } from "../utils/validarOtaku";
 export function Formulario() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,watch
-  } = useForm({defaultValues:{
-    descripcion:"psg",correo:"@gmail.com",precio:54,otaku:"eres otaku"
-  }});
+
+
+  //register -> permite tener los nombres de cada uno de los inputs
+  //que tengamos en nuestro formulario
+  //formState -> tiene manejo de errores
+  //reset -> limpia los campos que fueron agregados al register
+  //watch -> Como bien dice observa cambios de algún campo que hemos registrado previamente
+  //{defaultValues} -> Se pueden preestablecer valores a nuestro formulario
+  const { register, formState: { errors }, handleSubmit, reset, watch } = useForm({
+    defaultValues: {
+      descripcion: "Descripción por defecto"
+    }
+  });
+
+
   function insertar(data) {
-    swal("correo", data.correo);
+    swal("Descripción", data.descripcion);
     reset();
   }
 
@@ -23,31 +30,34 @@ export function Formulario() {
       <div className="sub-contenedor">
         <div className="header">
           <h1>📤Registro</h1>
-          <h1>Viendo: {watch("descripcion")}</h1>
+          <h2>Viendo: { watch("descripcion") }</h2>
         </div>
-
-        <form className="entradas" onSubmit={handleSubmit(insertar)}>
+        <h2>Precio: { watch("precio") } </h2>
+        {/* De esta manera "bindeamos" el evento del formulario con el 
+            handleSubmit de la libreria y la función insertar que creamos
+         */}
+        <form className="entradas" onSubmit={ handleSubmit(insertar) }>
           <ContainerInputs>
             <div className="subcontainer">
               <h4>Descripción:</h4>
               <Inputs
                 placeholder="Ingrese una descripción"
                 type="text"
-                {...register("descripcion", {
+                { ...register("descripcion", {
                   required: true,
                   minLength: 2,
                   maxLength: 20,
-                })}
+                }) }
               />
-              {errors.descripcion?.type === "required" && (
+              { errors.descripcion?.type === "required" && (
                 <p>💩Ingrese una descripcion</p>
-              )}
-              {errors.descripcion?.type === "minLength" && (
+              ) }
+              { errors.descripcion?.type === "minLength" && (
                 <p>💩Ingrese como minimo 2 caracteres</p>
-              )}
-              {errors.descripcion?.type === "maxLength" && (
+              ) }
+              { errors.descripcion?.type === "maxLength" && (
                 <p>💩Ingrese como maximo 20 caracteres</p>
-              )}
+              ) }
             </div>
           </ContainerInputs>
           <ContainerInputs>
@@ -57,14 +67,14 @@ export function Formulario() {
                 step="0.01"
                 type="number"
                 placeholder="Ingrese un precio"
-                {...register("precio", { required: true, valueAsNumber: true })}
+                { ...register("precio", { required: true, valueAsNumber: true }) }
               />
-              {errors.precio?.type === "required" && (
+              { errors.precio?.type === "required" && (
                 <p>💩Ingrese por favor un precio</p>
-              )}
-              {errors.precio?.type === "valueAsNumber" && (
+              ) }
+              { errors.precio?.type === "valueAsNumber" && (
                 <p>💩Ingrese un numero valido</p>
-              )}
+              ) }
             </div>
           </ContainerInputs>
           <ContainerInputs>
@@ -73,16 +83,16 @@ export function Formulario() {
               <Inputs
                 type="text"
                 placeholder="Ingrese correo"
-                {...register("correo", {
-                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,required:true
-                })}
+                { ...register("correo", {
+                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i, required: true
+                }) }
               />
-              {errors.correo?.type === "pattern" && (
+              { errors.correo?.type === "pattern" && (
                 <p>💩El formato del correo no es valido</p>
-              )}
-                {errors.correo?.type === "required" && (
+              ) }
+              { errors.correo?.type === "required" && (
                 <p>💩El correo  es requerido</p>
-              )}
+              ) }
             </div>
           </ContainerInputs>
           <ContainerInputs>
@@ -91,23 +101,24 @@ export function Formulario() {
               <Inputs
                 type="text"
                 placeholder="Ingrese su edad"
-               {...register("otaku",{required:true,validate:ValidarOtaku})}
+                { ...register("otaku", { required: true, validate: ValidarOtaku }) }
               />
               {
-                errors.otaku &&  <p>No eres otaku</p>
+                errors.otaku && <p>No eres otaku</p>
               }
-              
+
             </div>
           </ContainerInputs>
-        
+
           <div className="footercontent">
-            <Btnoperaciones titulo="enviar" icono={<FcPicture />} />
+            <Btnoperaciones titulo="enviar" icono={ <FcPicture /> } />
           </div>
         </form>
       </div>
     </Container>
   );
 }
+//Styled-Components
 const Container = styled.div`
   height: 100vh;
   position: relative;
